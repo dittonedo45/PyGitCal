@@ -2,6 +2,7 @@
 
 import time
 import datetime
+import collections
 
 def month_mem(start, end):
     def _giveday ():
@@ -41,7 +42,8 @@ def render_month(m):
         ms=[]
         sarr=["  " for i in range(7)]
         wd=0
-        yield "Mo Tu We Th Fr Sa Su".split(" ")
+        yield list(map(lambda x: "\033[4;38;5;45m%s\033[0m"%(x,),
+            "Mo Tu We Th Fr Sa Su".split(" ")))
         while True:
             for day in range(7):
                 d=m()
@@ -53,7 +55,16 @@ def render_month(m):
                     yield sarr
                     sarr=["  " for i in range(7)]
                 wd=sta.tm_wday
-                sarr[sta.tm_wday]="%02d" %(d.day,)
+                if sta.tm_wday==0:
+                    sarr[sta.tm_wday]="\033[32m%02d\033[0m" %(d.day,)
+                elif sta.tm_wday==6:
+                    sarr[sta.tm_wday]="\033[35;4m%02d\033[0m" %(d.day,)
+                elif sta.tm_wday==5:
+                    sarr[sta.tm_wday]="\033[38;5;34m%02d\033[0m" %(d.day,)
+                else:
+                    sarr[sta.tm_wday]="%02d" %(d.day,)
+    c=collections.deque()
+    c.rotate(1)
     for i in _render_month(m):
         if not i:
             break
@@ -63,8 +74,11 @@ def render_month(m):
 def pack(ya):
     res=[]
     for month_i, month_blob in calculate_each_and_every_month_s_max(ya):
-        month="%s"%(month_i.strftime("%B"))
-        res.append(list(["%20s" %(month,),
+        month="*%s-"%(month_i.strftime("%B"),)
+        month=month.center(22)
+        month=month.replace("*", "\033[31;4m")
+        month=month.replace("-", "\033[0m")
+        res.append(list([month,
             *render_month(month_blob)]))
         pass
     return res
@@ -79,12 +93,12 @@ def x_x(arr, j):
         pass
     pass
 def display_cal(y):
-    print(y)
+    print(("%d"%(y,)).center((21*3)))
     for j in x_x(pack(y), 3):
         for i in zip(*j):
-            print(" | ".join(i))
+            print("  ".join(i))
         print("\n")
         pass
     pass
-for i in range(2002, 2035):
+for i in range(2022, 2025):
     display_cal(i)
