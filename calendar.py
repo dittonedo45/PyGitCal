@@ -3,7 +3,7 @@
 import time
 import datetime
 import collections
-import re
+import re, random
 
 def show_day_func(reg):
     r=re.compile(reg)
@@ -13,7 +13,8 @@ def show_day_func(reg):
     return sub
 
 show_day=show_day_func(r"^0+")
-
+class Year(list):
+    pass
 class Date(datetime.datetime):
     def __new__(s, *arg, **kwargs):
         return datetime.datetime.__new__(s, *arg, **kwargs)
@@ -22,17 +23,20 @@ class Date(datetime.datetime):
     @property
     def yday(s):
         j=s.strftime("%d")
-        k="%03d"%(int(j),)
+        if random.randint(0,9)==7:
+            k="\033[45m%03d\033[0m"%(int(j),)
+        else:
+            k="%03d"%(int(j),)
+            pass
+        print(s.timestamp())
         return show_day(k)
     pass
 pass
 
 class Week_Vector(list):
-    def __new__(s):
-        return list(["\033[48;5;45m   \033[0m" for _ in range(7)])
-    def __setitem__(s, *arg, **kwargs):
-        print(arg)
-        return list.__setitem__(s, *arg, **kwargs)
+    def __init__(s):
+        for _ in range(7):
+            s.append ("\033[48;5;45m   \033[0m")
 
 def month_mem(start, end):
     def _giveday ():
@@ -47,7 +51,7 @@ def month_mem(start, end):
 def calculate_each_and_every_month_s_max(y=None):
     if not y:
         y=Date.now().year
-    months=[]
+    months=Year()
     def _cal():
         nonlocal y
         i=Date(y, 1, 1)
