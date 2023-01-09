@@ -86,8 +86,6 @@ def render_month(m):
                     sarr=Week_Vector()
                 wd=sta.tm_wday
                 sarr[sta.tm_wday]=d.yday
-    c=collections.deque()
-    c.rotate(1)
     for i in _render_month(m):
         if not i:
             break
@@ -120,5 +118,10 @@ def display_cal(y):
         print("\n")
         pass
     pass
-for i in range(2002, 2025):
-    display_cal(i)
+try:
+    for i in range(2002, 2095):
+        display_cal(i)
+        pass
+    pass
+except OverflowError:
+    pass
