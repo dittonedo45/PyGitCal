@@ -3,19 +3,36 @@
 import time
 import datetime
 import collections
+import re
+
+def show_day_func(reg):
+    r=re.compile(reg)
+    def sub(x):
+        nonlocal r
+        return x
+    return sub
+
+show_day=show_day_func(r"^0+")
 
 class Date(datetime.datetime):
     def __new__(s, *arg, **kwargs):
         return datetime.datetime.__new__(s, *arg, **kwargs)
     def __str__(s):
-        return s.strftime("%B").center(19)
+        return s.strftime("%B").center(6+(7*3))
+    @property
+    def yday(s):
+        j=s.strftime("%d")
+        k="%03d"%(int(j),)
+        return show_day(k)
     pass
 pass
 
 class Week_Vector(list):
+    def __new__(s):
+        return list(["\033[48;5;45m   \033[0m" for _ in range(7)])
     def __setitem__(s, *arg, **kwargs):
         print(arg)
-        return super().__setitem__(s, *arg, **kwargs)
+        return list.__setitem__(s, *arg, **kwargs)
 
 def month_mem(start, end):
     def _giveday ():
@@ -56,7 +73,7 @@ def render_month(m):
         sarr=Week_Vector()
         wd=0
         yield list(map(lambda x: "%s"%(x,),
-            "Mo Tu We Th Fr Sa Su".split(" ")))
+            "Mon Tue Wed Thu Fri Sat Sun".split(" ")))
         while True:
             for day in range(7):
                 d=m()
@@ -68,7 +85,7 @@ def render_month(m):
                     yield sarr
                     sarr=Week_Vector()
                 wd=sta.tm_wday
-                sarr[sta.tm_wday]="%02d" %(d.day,)
+                sarr[sta.tm_wday]=d.yday
     c=collections.deque()
     c.rotate(1)
     for i in _render_month(m):
@@ -96,7 +113,7 @@ def x_x(arr, j):
         pass
     pass
 def display_cal(y):
-    print(("%d"%(y,)).center((22*3)))
+    print(("%d"%(y,)).center((2+6+(7*3))*3))
     for j in x_x(pack(y), 3):
         for i in zip(*j):
             print("  ".join(i))
