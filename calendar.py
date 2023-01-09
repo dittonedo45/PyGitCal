@@ -12,6 +12,11 @@ class Date(datetime.datetime):
     pass
 pass
 
+class Week_Vector(list):
+    def __setitem__(s, *arg, **kwargs):
+        print(arg)
+        return super().__setitem__(s, *arg, **kwargs)
+
 def month_mem(start, end):
     def _giveday ():
         nonlocal start
@@ -48,7 +53,7 @@ def calculate_each_and_every_month_s_max(y=None):
 def render_month(m):
     def _render_month(m):
         ms=[]
-        sarr=["  " for i in range(7)]
+        sarr=Week_Vector()
         wd=0
         yield list(map(lambda x: "%s"%(x,),
             "Mo Tu We Th Fr Sa Su".split(" ")))
@@ -61,7 +66,7 @@ def render_month(m):
                 sta=time.localtime(d.timestamp())
                 if wd==6:
                     yield sarr
-                    sarr=["  " for i in range(7)]
+                    sarr=Week_Vector()
                 wd=sta.tm_wday
                 sarr[sta.tm_wday]="%02d" %(d.day,)
     c=collections.deque()
