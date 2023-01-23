@@ -150,7 +150,7 @@ def display_cal(y):
     pass
 
 try:
-    for i in range(2002, 2024):
+    for i in range(2020, 2024):
         display_cal(i)
         pass
     pass
