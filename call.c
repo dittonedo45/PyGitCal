@@ -1,5 +1,5 @@
 #include <git2.h>
-#include <python3.8/Python.h>
+#include <Python.h>
 
 static int
 calculate_commits (char* path, int (*cb)(void *dptr,
@@ -32,6 +32,7 @@ calculate_commits (char* path, int (*cb)(void *dptr,
 				git_revwalk_free (revwalk);
 	} while (0);
 	git_repository_free (rp);
+	return 0;
 }
 
 int
