@@ -13,5 +13,5 @@ gcc call.c -lpython<VERSION> -I<path to headers of your python> -lgit2
 ```
 
 #What to expect?
-Something like:
+Here is how it looked on a vim's git repository:
 <img src="./exa.png">
